@@ -6,10 +6,12 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 function App() {
 
   const [data, setData] = useState([])
+  const [search, setSearch] = useState('')
+  const [autocomplete, setAutocomplete] = useState([])
 
-  const searchRef = useRef('')
-  const mapRef = useRef('')
-
+  const searchRef = useRef(null)
+  const mapRef = useRef(null)
+  const resultsRef = useRef(null)
 
   const fetchData = () => {
     console.log();
@@ -53,28 +55,20 @@ function App() {
     )
   }
 
-  // useEffect(() => {
-  //   var container = L.DomUtil.get('map');
-  //   if(container != null)
-  //     container._leaflet_id = null;
-  //   var map_ = L.map('map', {
-  //     center: [0,0],
-  //     zoom: 2,
-  //     dragging: true
-  //   });
-  //   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  //     maxZoom: 19,
-  //     attribution: '© OpenStreetMap'
-  //   }).addTo(map_);
-  // })
-  
+useEffect(() => {
+  fetch(`entity_type/${search}`)
+    .then(res => res.json())
+    .then(data => {
+      setAutocomplete(data.types)
+    })
+}, [search])
 
   /**
    * Este efecto agrega los clusters pero no se pouede hacer drag
    * con el mouse. Sin embargo funciona moviendo las teclas de movimiento.
    * CUEK :c
    */
-  {useEffect(() => {
+  useEffect(() => {
     var container = L.DomUtil.get('map');
     if(container != null)
       container._leaflet_id = null;
@@ -82,14 +76,13 @@ function App() {
       center: [0,0],
       zoom: 2,
       dragging: true,
-      renderer: L.SVG,
       minZoom: 1,
 
     });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap'
     }).addTo(map_);
-    var markers = L.markerClusterGroup({})
+    var markers = L.markerClusterGroup()
     data.results?.map(entity => {
       var marker = L.marker([entity.lat, entity.lon])
       marker.bindPopup(entityInfo(entity), {
@@ -101,20 +94,33 @@ function App() {
     })
     markers.addTo(map_)
 
-  }, [data])}
+  }, [data])
   
 
   return (
     <div className="App container">
-      <h4 className='row mt-2 '>Wikidata Atlas</h4>
-      <div className='input-group flex-nowrap mb-4 float-right'>
-        <input className='form-control active-purple-4 col-4' ref={searchRef} placeholder='Search Wikidata'/>
-        <button className='btn btn-outline-secondary' onClick={onClickButton}>
+      <div className='row my-4 justify-content-end'>
+        <h3 className='col'>Wikidata Atlas</h3>
+        <input className='col-3 me-2 border rounded text-dark' 
+          ref={searchRef}
+          onChange={() => setSearch(searchRef.current.value)} 
+          placeholder='Search Wikidata'
+          list='list'
+        />
+        <datalist id='list'>
+          {
+            autocomplete.map(e=>{
+              return <option value={e}></option>
+            })
+          }
+        </datalist>
+        <button className='btn btn-info col-1' onClick={onClickButton}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
             <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
           </svg>
         </button>
       </div>
+      <div ref={resultsRef}></div>
       <div className='row border border-success' id='map' ref={mapRef}></div>
     </div>
   );
