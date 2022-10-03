@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import './App.css'
+import "leaflet.markercluster/dist/leaflet.markercluster";
 import 'leaflet.markercluster/dist/MarkerCluster.css'
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
