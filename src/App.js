@@ -2,6 +2,8 @@ import L, { map, marker, Point } from 'leaflet'
 import 'leaflet.markercluster/dist/leaflet.markercluster'
 import React, { useEffect, useRef, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import MarkerCluster from './components/MarkerCluster';
+
 
 function App() {
 
@@ -10,8 +12,6 @@ function App() {
   const [autocomplete, setAutocomplete] = useState([])
 
   const searchRef = useRef(null)
-  const mapRef = useRef(null)
-  const resultsRef = useRef(null)
 
   const fetchData = () => {
     console.log();
@@ -20,39 +20,11 @@ function App() {
       .then(data =>{
         setData(data);
     })
-    .catch(error => console.log(error))
+    .catch(error => console.log("Fetch data error: " + error))
   }
 
   function onClickButton() {
     fetchData()
-  }
-
-  function getLink(e){
-    var url = e.entity
-    var id = url.split('Q')[1]
-    return `<a href='${url}' target="_blank" rel="noreferrer noopener">Q${id} 
-              <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" fill="currentColor" class="bi bi-box-arrow-in-up-right" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M6.364 13.5a.5.5 0 0 0 .5.5H13.5a1.5 1.5 0 0 0 1.5-1.5v-10A1.5 1.5 0 0 0 13.5 1h-10A1.5 1.5 0 0 0 2 2.5v6.636a.5.5 0 1 0 1 0V2.5a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v10a.5.5 0 0 1-.5.5H6.864a.5.5 0 0 0-.5.5z"/>
-                <path fill-rule="evenodd" d="M11 5.5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793l-8.147 8.146a.5.5 0 0 0 .708.708L10 6.707V10.5a.5.5 0 0 0 1 0v-5z"/>
-              </svg></a>`
-  }
-
-  function getImage(e){
-    var image = e.image
-    var thumb = e.thumbnail
-    return `<a href='${image}' target="_blank" rel="noreferrer noopener">
-      <img class='img-thumbnail mx-auto d-block mt-2' src='${thumb}' alt=''></a>` 
-  }
-
-  function entityInfo(e) {
-    return (
-      `<div>
-        <b>${e.label}</b> (${getLink(e)})</br>
-        ${e.description}</br>
-        ${getImage(e)}
-      </div>
-      `
-    )
   }
 
 useEffect(() => {
@@ -62,39 +34,6 @@ useEffect(() => {
       setAutocomplete(data.types)
     })
 }, [search])
-
-  /**
-   * Este efecto agrega los clusters pero no se pouede hacer drag
-   * con el mouse. Sin embargo funciona moviendo las teclas de movimiento.
-   * CUEK :c
-   */
-  useEffect(() => {
-    var container = L.DomUtil.get('map');
-    if(container != null)
-      container._leaflet_id = null;
-    var map_ = L.map('map', {
-      center: [0,0],
-      zoom: 2,
-      dragging: true,
-      minZoom: 1,
-
-    });
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(map_);
-    var markers = L.markerClusterGroup()
-    data.results?.map(entity => {
-      var marker = L.marker([entity.lat, entity.lon])
-      marker.bindPopup(entityInfo(entity), {
-        maxWidth: 300,
-        minWidth: 280,
-        autoPanPaddingTopLeft: L.Point(3,3)
-      })
-      markers.addLayer(marker)
-    })
-    markers.addTo(map_)
-
-  }, [data])
   
 
   return (
@@ -120,8 +59,14 @@ useEffect(() => {
           </svg>
         </button>
       </div>
-      <div ref={resultsRef}></div>
-      <div className='row border border-success' id='map' ref={mapRef}></div>
+      <MapContainer center={[0,0]} zoom={2} minZoom={2} maxZoom={18} className='map'>
+        <TileLayer
+          url='https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+          noWrap={true}
+        />
+        <MarkerCluster markers={data} />
+      </MapContainer>
     </div>
   );
 }
