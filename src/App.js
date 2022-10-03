@@ -1,9 +1,6 @@
-import L, { map, marker, Point } from 'leaflet'
-import 'leaflet.markercluster/dist/leaflet.markercluster'
 import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import { MapContainer, TileLayer} from 'react-leaflet'
 import MarkerCluster from './components/MarkerCluster';
-
 
 function App() {
 

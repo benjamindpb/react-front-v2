@@ -1,8 +1,5 @@
 import { useEffect } from "react";
 import L  from "leaflet";
-import "leaflet.markercluster/dist/leaflet.markercluster";
-import "leaflet.markercluster/dist/MarkerCluster.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import { useMap } from "react-leaflet";
 import { customMarker } from "../constants";
 import { getEntityInfo } from "./MarkerClusterFunctions";
@@ -20,13 +17,10 @@ const MarkerCluster = ({ markers }) => {
       })
       .addTo(mcg)
       .bindPopup(getEntityInfo(t))
-      .on('click', e => {
-        map.setView(e.target.getLatLng(), 16)
-      })
-    });
-    // center the map around the markers
-    map.fitBounds(mcg.getBounds());
-    
+    //   .on('click', e => {
+    //     map.setView(e.target.getLatLng(), 16)
+    //   })
+    });    
     map.setView([0,0], 2)
     map.addLayer(mcg);
   }, [markers, map]);
