@@ -6,22 +6,38 @@ function App() {
 
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
+  const [searchW, setSearchW] = useState(null)
   const [autocomplete, setAutocomplete] = useState([])
+  const [numberOfEntities, setNumberOfEntities] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   const searchRef = useRef(null)
 
   const fetchData = () => {
-    console.log();
     fetch(`data2/${searchRef.current.value}`)
       .then(res => res.json())
       .then(data =>{
         setData(data);
-    })
-    .catch(error => console.log("Fetch data error: " + error))
+        setNumberOfEntities(data.results.length);
+        setSearchW(searchRef.current.value)
+        setLoading(false)
+      })
+      .catch(error => console.log("Fetch data error: " + error))
   }
 
   function onClickButton() {
-    fetchData()
+    fetch(`ask/${searchRef.current.value}`)
+      .then(res => res.json())
+      .then(data =>{
+        console.log(data.boolean)
+        if (data.boolean) {
+          setLoading(true)
+          fetchData()
+        }
+        else{
+          alert("Error: enter a valid entity type.")
+        }
+      })
   }
 
 useEffect(() => {
@@ -35,9 +51,16 @@ useEffect(() => {
 
   return (
     <div className="App container">
-      <div className='row my-4 justify-content-end'>
-        <h3 className='col fs-2'>Wikidata Atlas <i class="bi bi-pin-map-fill"></i></h3>
-        <input className='col-3 me-2 border rounded text-dark' 
+      <h3 className='col fs-3'>Wikidata Atlas <i class="bi bi-pin-map-fill"></i></h3>
+      <div className='row my-3 justify-content-end'>
+      {
+        // (numberOfEntities > 0) && <div>HOLA</div>
+        numberOfEntities > 0 ? 
+        <div className='col text-success'>
+          Se encontraron un total de <b> {numberOfEntities} </b> entidades de tipo <b>{searchW}</b>
+        </div> : <div className='d-flex'></div>
+      }
+        <input className='col-3 me-1 border rounded text-dark' 
           ref={searchRef}
           onChange={() => setSearch(searchRef.current.value)} 
           placeholder='Search Wikidata'
@@ -51,9 +74,14 @@ useEffect(() => {
           }
         </datalist>
         <button className='btn btn-info col-1' onClick={onClickButton}>
-          <i className="bi bi-search"></i>
+          {
+            loading ? <div class="spinner-border spinner-border-sm" role="status">
+            <span class="sr-only"></span>
+          </div> : <i className="bi bi-search"></i>
+          }
         </button>
       </div>
+      
       <MapContainer center={[0,0]} zoom={2} minZoom={2} maxZoom={18} className='map'>
         <TileLayer
           url='https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
