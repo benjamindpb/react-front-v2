@@ -1,67 +1,95 @@
+import { DivOverlay } from 'leaflet';
 import React, { useEffect, useRef, useState } from 'react';
-import { MapContainer, TileLayer} from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet';
 import MarkerCluster from './components/MarkerCluster';
 
 function App() {
 
   const [data, setData] = useState([])
   const [search, setSearch] = useState('')
+  const [searchW, setSearchW] = useState(null)
   const [autocomplete, setAutocomplete] = useState([])
+  const [numberOfEntities, setNumberOfEntities] = useState(0)
+  const [loadingSearch, setLoadingSearch] = useState(false)
+  const [autocompleteLoading, setAutocompleteLoading] = useState(false)
 
   const searchRef = useRef(null)
 
   const fetchData = () => {
-    console.log();
-    fetch(`data2/${searchRef.current.value}`)
+    fetch(`data/${searchRef.current.value}`)
       .then(res => res.json())
       .then(data =>{
         setData(data);
-    })
-    .catch(error => console.log("Fetch data error: " + error))
+        setNumberOfEntities(data.results.length);
+        setSearchW(searchRef.current.value)
+        setLoadingSearch(false)
+      })
+      .catch(error => console.log("Fetch data error: " + error))
   }
 
   function onClickButton() {
+    setLoadingSearch(true)
     fetchData()
   }
 
 useEffect(() => {
-  fetch(`entity_type/${search}`)
-    .then(res => res.json())
-    .then(data => {
+  setAutocompleteLoading(true)
+  fetch(`autocomplete/${search}`)
+  .then(res => res.json())
+  .then(data => {
       setAutocomplete(data.types)
     })
+  setAutocompleteLoading(false)
 }, [search])
   
 
   return (
     <div className="App container">
-      <div className='row my-4 justify-content-end'>
-        <h3 className='col'>Wikidata Atlas</h3>
-        <input className='col-3 me-2 border rounded text-dark' 
+      <h3 className='col fs-3'>Wikidata Atlas <i class="bi bi-pin-map-fill"></i></h3>
+      <div className='row my-2 justify-content-end'>
+      
+        <input className='col-3 me-1 border rounded text-dark' 
           ref={searchRef}
           onChange={() => setSearch(searchRef.current.value)} 
           placeholder='Search Wikidata'
           list='list'
         />
+        {
+          autocompleteLoading ? <div className='bg-danger'>Loading...</div> :
         <datalist id='list'>
-          {
-            autocomplete.map(e=>{
-              return <option value={e}></option>
-            })
-          }
+        {
+          autocomplete.map(e=>{
+            var values = e[1]
+            return <option value={values.label}>{values.description}</option>
+          })
+        }
         </datalist>
+        }
         <button className='btn btn-info col-1' onClick={onClickButton}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-          </svg>
+          {
+            loadingSearch ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search"></i>
+          }
         </button>
       </div>
+
+      {
+        // (numberOfEntities > 0) && <div>HOLA</div>
+        numberOfEntities > 0 ? 
+        <div className='col text-success h-50'>
+          <b> {numberOfEntities} </b> entities instance of <b>{searchW}</b> founded.
+        </div> : <div className='col text-secondary h-50'>Search an entity type (P31 property)...</div>
+      }
+
+      
       <MapContainer center={[0,0]} zoom={2} minZoom={2} maxZoom={18} className='map'>
+             
         <TileLayer
           url='https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
-          noWrap={true}
         />
+
+
+        
         <MarkerCluster markers={data} />
       </MapContainer>
     </div>
