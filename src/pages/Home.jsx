@@ -38,53 +38,55 @@ function Home() {
   }, [search])
     return ( 
         <>
-          <div className='row my-2 justify-content-end'>      
-            <div className="col">
-            <input className='col-3 me-1 border rounded text-dark' 
-              ref={searchRef}
-              onChange={() => setSearch(searchRef.current.value)} 
-              placeholder='Search Wikidata'
-              list='list'
-            />
-      
-            <datalist id='list'>
-            {
-              autocomplete.map(e=>{
-                var values = e[1]
-                return <option value={values.label}>{values.description}</option>
-              })
-            }
-            </datalist>
-      
-            <button className='btn btn-info col-1' onClick={onClickButton}>
-              {
-                loadingSearch ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search"></i>
-              }
-            </button>
+          <div className="row d-flex justify-content-center">
+            <div className="col-5">
+              <div className='col-9 input-group input-group-sm my-3'>    
+                  <input className='border text-dark form-control' 
+                    ref={searchRef}
+                    onChange={() => setSearch(searchRef.current.value)} 
+                    placeholder='Search Wikidata'
+                    list='list'
+                  />
+            
+                  <datalist id='list'>
+                  {
+                    autocomplete.map(e=>{
+                      var values = e[1]
+                      return <option value={values.label}>{values.description}</option>
+                    })
+                  }
+                  </datalist>
+            
+                  <button className='col-3 btn btn-sm btn-info btn-outline-secondary' onClick={onClickButton}>
+                    {
+                      loadingSearch ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search"></i>
+                    }
+                  </button>      
+              </div>
             </div>
-      
           </div>
 
+    
+    <div className="row d-flex justify-content-center">
     {
       // (numberOfEntities > 0) && <div>HOLA</div>
       numberOfEntities > 0 ? 
-      <div className='col text-success h-50'>
-        <b> {numberOfEntities} </b> entities instance of <b>{searchW}</b> founded.
+      <div className='col-10 text-success fs-6'>
+        <b> {numberOfEntities} </b> instances of <b>{searchW}</b> founded.
       </div> : 
-        <div className='col text-secondary h-50'>
-          Search an entity type (P31) . For example: moauntain, river, lake
+        <div className='col-10 text-secondary fs-6'>
+          Search an entity type (P31) . For example: mountain, river, lake, stadium, temple, etc.
         </div>
     }
-
-    
-    <div className="row">
-    <MapContainer center={[0,0]} zoom={2} minZoom={2} maxZoom={18} className='map col-8'>             
-      <TileLayer
-        url='https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
-      />        
-      <MarkerCluster markers={data} />
-    </MapContainer>
+    </div>
+    <div className="row d-flex justify-content-center">
+        <MapContainer center={[0,0]} zoom={2} minZoom={2} maxZoom={18} className='map col-10'>             
+          <TileLayer
+            url='https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+          />        
+          <MarkerCluster markers={data} />
+        </MapContainer>
     </div>
         </>
      );

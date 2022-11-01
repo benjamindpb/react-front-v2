@@ -13,8 +13,8 @@ function App() {
 
   return (
       <>
-      <NavBar />
-      <div className='cotainer'>
+      <div className='container-fluid'>
+        <NavBar />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
