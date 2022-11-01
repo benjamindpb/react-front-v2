@@ -1,9 +1,9 @@
-import { useEffect } from "react";
-import L  from "leaflet";
+import L from "leaflet";
 import "leaflet.markercluster/dist/leaflet.markercluster";
+import { useEffect } from "react";
 import { useMap } from "react-leaflet";
 import { customMarker } from "../constants";
-import { getEntityInfo } from "./MarkerClusterFunctions";
+import { getEntityInfo } from "../MarkerClusterFunctions";
 
 
 const mcg = L.markerClusterGroup();
@@ -16,7 +16,7 @@ const MarkerCluster = ({ markers }) => {
   useEffect(() => {
     mcg.clearLayers();
     markers.results?.map((t) => {
-      L.marker(new L.LatLng(t.lat, t.lon), {
+      return L.marker(new L.LatLng(t.lat, t.lon), {
         icon: customMarker
       })
       .addTo(mcg)

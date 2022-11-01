@@ -1,3 +1,60 @@
 .map {
+  position: relative;
   height: 80vh;
+}
+
+.App{
+  --dark-red: #980001ff;
+  --green-cyan: #329967ff;
+  --sapphire-blue: #016698ff;
+  --davys-grey: #494849ff;
+
+  padding: 0;
+}
+
+#appTitle1 {
+  color: var(--dark-red);
+}
+
+#logo {
+  color: var(--sapphire-blue);
+}
+
+#logo-img{
+  width: 50px;
+}
+
+.nav{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  padding: 0 1rem;
+  background-color: white;
+
+}
+
+.nav ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: flex;
+  gap: 1rem;
+  font-size: 1.5rem;
+}
+
+.nav li:hover{
+  color: var(--green-cyan);
+}
+.nav li:active{
+  color:aqua;
+}
+
+.site-title {
+  font-size: 1.8rem;
+}
+
+.nav a {
+  color: inherit;
+  text-decoration: none;
 }
