@@ -2,24 +2,24 @@ import { Link } from "react-router-dom";
 
 function NavBar() {
     return ( 
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <Link class="navbar-brand" to="/">
-                    <img id='logo-img' src='wd-logo.svg' alt='' className='mx-1 mb-2'></img> Wikidata Atlas <i class="bi bi-globe"></i>
+        <nav className="navbar navbar-expand-md py-0 navbar-dark bg-dark">
+            <div className="container-fluid">
+                <Link className="navbar-brand fs-2" to="/">
+                    <img id='logo-img' src='wd-logo.svg' alt='' className='mx-1 mb-2'></img> Wikidata Atlas <i className="bi bi-globe"></i>
                 </Link>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span className="navbar-toggler-icon"></span>
                 </button>
-                <div class="col collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex">
-                        <li class="nav-item">
-                        <Link class="nav-link" aria-current="page" to="/">Home</Link>
+                <div className="collapse navbar-collapse flex-grow-1 text-right" id="navbarSupportedContent">
+                    <ul className="navbar-nav ms-auto flex-nowrap">
+                        <li className="nav-item">
+                            <Link className="nav-link m-2 menu-item fs-5" aria-current="page" to="/">Home</Link>
                         </li>
-                        <li class="nav-item">
-                        <Link class="nav-link" to="/about">About</Link>
+                        <li className="nav-item">
+                            <Link className="nav-link m-2 menu-item fs-5" to="/about">About</Link>
                         </li>
-                        <li class="nav-item">
-                        <Link class="nav-link" to="/contact">Contact</Link>
+                        <li className="nav-item">
+                            <Link className="nav-link m-2 menu-item fs-5" to="/contact">Contact</Link>
                         </li>
                     </ul>
                 </div>
