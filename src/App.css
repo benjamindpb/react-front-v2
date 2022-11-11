@@ -33,6 +33,10 @@
 
 }
 
+.leaflet-popup-content-wrapper, .leaflet-popup.tip {
+  background-color: lightsteelblue
+}
+
 .nav ul {
   padding: 0;
   margin: 0;
