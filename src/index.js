@@ -10,6 +10,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "leaflet.markercluster/dist/leaflet.markercluster";
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
+import "/node_modules/flag-icons/css/flag-icons.min.css";
+
 import './App.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

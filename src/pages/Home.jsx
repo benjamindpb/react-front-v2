@@ -57,7 +57,7 @@ function Home() {
                   }
                   </datalist>
             
-                  <button className='col-3 btn btn-sm btn-info btn-outline-secondary' onClick={onClickButton}>
+                  <button className='col-3 btn btn-sm btn-secondary' onClick={onClickButton}>
                     {
                       loadingSearch ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search"></i>
                     }
@@ -75,15 +75,15 @@ function Home() {
         <b> {numberOfEntities} </b> instances of <b>{searchW}</b> founded.
       </div> : 
         <div className='col-10 text-secondary fs-6'>
-          Search an entity type (P31) . For example: mountain, river, lake, stadium, temple, etc.
+          Search an entity type. For example: mountain, river, lake, stadium, temple, etc.
         </div>
     }
     </div>
     <div className="row d-flex justify-content-center">
         <MapContainer center={[0,0]} zoom={2} minZoom={2} maxZoom={18} className='map col-10'>             
           <TileLayer
-            url='https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png'
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Tiles style by <a href="https://www.hotosm.org/" target="_blank">Humanitarian OpenStreetMap Team</a> hosted by <a href="https://openstreetmap.fr/" target="_blank">OpenStreetMap France</a>'
+            url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
+            attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           />        
           <MarkerCluster markers={data} />
         </MapContainer>

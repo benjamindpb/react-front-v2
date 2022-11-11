@@ -7,14 +7,10 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 
 function App() {
-
-
-  
-
   return (
       <>
+      <NavBar />
       <div className='container-fluid'>
-        <NavBar />
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path='/about' element={<About />} />
