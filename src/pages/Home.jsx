@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { MapContainer, TileLayer } from "react-leaflet"
 import MarkerCluster from "../components/MarkerCluster"
+import Tippy from "@tippy.js/react"
+import '/node_modules/tippy.js/themes/light.css'
+
+
 
 function Home() {
     const [data, setData] = useState([])
@@ -9,11 +13,12 @@ function Home() {
     const [autocomplete, setAutocomplete] = useState([])
     const [numberOfEntities, setNumberOfEntities] = useState(0)
     const [loadingSearch, setLoadingSearch] = useState(false)
+    const [limit, setLimit] = useState(0)
   
-    const searchRef = useRef(null)
+    const searchRef = useRef(null)    
   
     const fetchData = () => {
-      fetch(`data/${searchRef.current.value}`)
+      fetch(`data/${searchRef.current.value}/${limit}`)
         .then(res => res.json())
         .then(data =>{
           setData(data);
@@ -36,35 +41,55 @@ function Home() {
         setAutocomplete(data.types)
       })
   }, [search])
-    return ( 
+    
+  return ( 
         <>
-          <div className="row d-flex justify-content-center">
-            <div className="col-5">
-              <div className='col-9 input-group input-group-sm my-3'>    
-                  <input className='border text-dark form-control' 
+            <div className='row input-group input-group-sm my-3 d-flex justify-content-center'>    
+              <div className="col-sm-3">
+                <input className='border text-dark form-control ' 
                     ref={searchRef}
                     onChange={() => setSearch(searchRef.current.value)} 
                     placeholder='Search Wikidata'
                     list='list'
-                  />
-            
-                  <datalist id='list'>
-                  {
-                    autocomplete.map(e=>{
-                      var values = e[1]
-                      return <option value={values.label}>{values.description}</option>
-                    })
-                  }
-                  </datalist>
-            
-                  <button className='col-3 btn btn-sm btn-secondary' onClick={onClickButton}>
-                    {
-                      loadingSearch ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search"></i>
-                    }
-                  </button>      
+                />
               </div>
+          
+                <datalist id='list'>
+                {
+                  autocomplete.map(e=>{
+                    var values = e[1]
+                    return <option value={values.label}>{values.description}</option>
+                  })
+                }
+                </datalist>
+          
+              <div className="col-sm-2">
+                <select class="form-select" id="limitInputSelect" onChange={e => setLimit(e.target.value)}>
+                  <option value="1">10</option>
+                  <option value="2">100</option>
+                  <option value="3">1000</option>
+                  <option value="4">10000</option>
+                  <option value="5">100000</option>
+                  <option selected value='0'>No limit</option>
+                </select> 
+                <Tippy 
+                  content='To set a limit for the results of the instances' 
+                  placement="right" 
+                  followCursor={true}
+                  maxWidth={200}
+                >
+                  <i class="bi bi-info-circle"></i>                  
+                </Tippy>
+              </div>
+              <div className="col-sm-1">
+                <button className='btn btn-secondary' onClick={onClickButton}>
+                    {
+                      loadingSearch ? <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search" ></i>
+                    }
+                </button>
+              </div>
+                     
             </div>
-          </div>
 
     
     <div className="row d-flex justify-content-center">
@@ -75,7 +100,7 @@ function Home() {
         <b> {numberOfEntities} </b> instances of <b>{searchW}</b> founded.
       </div> : 
         <div className='col-10 text-secondary fs-6'>
-          Search an entity type. For example: mountain, river, lake, stadium, temple, etc.
+          Search an entity type. For example: mountain, river, stadium, temple, work of art, etc.
         </div>
     }
     </div>
