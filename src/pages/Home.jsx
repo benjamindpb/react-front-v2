@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { MapContainer, TileLayer } from "react-leaflet"
 import MarkerCluster from "../components/MarkerCluster"
 import Tippy from "@tippy.js/react"
-import '/node_modules/tippy.js/themes/light.css'
+import '/node_modules/tippy.js/themes/material.css'
+
 
 
 
@@ -52,6 +53,15 @@ function Home() {
                     placeholder='Search Wikidata'
                     list='list'
                 />
+                <Tippy 
+                  content='Search a Wikidata entity type label. For example: museum, mountain, river, stadium, temple, work of art, beach, etc.' 
+                  placement="right" 
+                  followCursor={true}
+                  maxWidth={350}
+                  theme="material"
+                >
+                  <i class="bi bi-question-circle"></i>                  
+                </Tippy>
               </div>
           
                 <datalist id='list'>
@@ -73,12 +83,14 @@ function Home() {
                   <option selected value='0'>No limit</option>
                 </select> 
                 <Tippy 
-                  content='To set a limit for the results of the instances' 
+                  content='Select the limit of entities to get. No Limit by default' 
                   placement="right" 
                   followCursor={true}
-                  maxWidth={200}
+                  maxWidth={350}
+                  theme="material"
+                  
                 >
-                  <i class="bi bi-info-circle"></i>                  
+                  <i class="bi bi-question-circle" style={{"font-size": "1rem"}}></i>                  
                 </Tippy>
               </div>
               <div className="col-sm-1">
@@ -93,7 +105,7 @@ function Home() {
 
     
     <div className="row d-flex justify-content-center">
-    {
+    {/* {
       // (numberOfEntities > 0) && <div>HOLA</div>
       numberOfEntities > 0 ? 
       <div className='col-10 text-success fs-6'>
@@ -102,14 +114,15 @@ function Home() {
         <div className='col-10 text-secondary fs-6'>
           Search an entity type. For example: mountain, river, stadium, temple, work of art, etc.
         </div>
-    }
+    } */}
     </div>
     <div className="row d-flex justify-content-center">
-        <MapContainer center={[0,0]} zoom={2} minZoom={2} maxZoom={18} className='map col-10'>             
+        <MapContainer  className='map col-10' trackResize={false}>             
           <TileLayer
-            url='https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png'
+            url='https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png'
             attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
           />        
+          
           <MarkerCluster markers={data} />
         </MapContainer>
     </div>

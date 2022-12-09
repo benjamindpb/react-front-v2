@@ -1,8 +1,7 @@
 function getLinkHTML(e){
     var url = e.entity
     var id = url.split('Q')[1]
-    return `<a href='${url}' target="_blank" rel="noreferrer noopener">Q${id} 
-    <i class="bi bi-box-arrow-in-up-right"></i></a>`
+    return `<a href='${url}' target="_blank" rel="noreferrer noopener">Q${id}<i class="bi bi-box-arrow-in-up-right"></i></a>`
   }
 
 function getImageHTML(e){
@@ -24,8 +23,9 @@ function getCountryImg(e) {
 export function getEntityInfo(e) {
     return (
       `<div>
-        <b>${e.label}</b> (${getLinkHTML(e)}) ${getCountryImg(e)}</br>
-        ${e.description}</br>
+        <b>${e.label}</b> ${getCountryImg(e)} </br>
+        ${getLinkHTML(e)}</br></br>
+        <span class='fs-7'>${e.description}</span></br>
         ${getImageHTML(e)}
       </div>
       `
