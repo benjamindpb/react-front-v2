@@ -1,22 +1,24 @@
 function getLinkHTML(e){
     var url = e.entity
     var id = url.split('Q')[1]
-    return `<a href='${url}' target="_blank" rel="noreferrer noopener">Q${id}<i className="bi bi-box-arrow-in-up-right"></i></a>`
+    return `<a href='${url}' target="_blank" rel="noreferrer noopener">Q${id}<i class="bi bi-box-arrow-in-up-right"></i></a>`
   }
 
 function getImageHTML(e){
     var image = e.image
     var thumb = e.thumbnail
-    return `<a href='${image}' target="_blank" rel="noreferrer noopener">
-      <img className='img-thumbnail mx-auto d-block mt-2' src='${thumb}' alt=''></a>` 
+    if (image === "no-image.png") {
+      return `<img class='img-thumbnail mx-auto d-block mt-2' src='${thumb}' alt=''></img>`
+    }
+    else{
+      return `<a href='${image}' target="_blank" rel="noreferrer noopener">
+        <img class='img-thumbnail mx-auto d-block mt-2' src='${thumb}' alt=''></a>` 
+
+    }
   }
 
 function getCountryImg(e) {
-  return `<span className="fi fi-${e.countryCode}"></span>`
-  // <img
-  // src="https://flagcdn.com/za.svg"
-  // width="30"
-  // alt="South Africa">
+  return `<span class="fi fi-${e.countryCode}"></span>`
   
 }
 
@@ -26,6 +28,7 @@ export function getEntityInfo(e) {
         <b>${e.label}</b> ${getCountryImg(e)} </br>
         ${getLinkHTML(e)}</br></br>
         <span className='fs-7'>${e.description}</span></br>
+        <p><i class="bi bi-geo-alt"></i><a target="_blank" rel="noreferrer noopener" class="external text" href="//www.google.com/maps?ll=${e.lat},${e.lon}&amp;q=${e.lat},${e.lon}&amp;hl=en&amp;t=h&amp;z=11">(${e.lat}, ${e.lon})</a></p>
         ${getImageHTML(e)}
       </div>
       `
