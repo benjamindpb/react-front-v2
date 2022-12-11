@@ -15,41 +15,63 @@ function Home() {
     const [numberOfEntities, setNumberOfEntities] = useState(0)
     const [loadingSearch, setLoadingSearch] = useState(false)
     const [limit, setLimit] = useState(0)
-    const [entityInfo, setEntityInfo] = useState({})
+    const [entitiesWithCoords, setEntitiesWithCoords] = useState(0)
+    const [entityDescription, setEntityDescription] = useState('')
   
-    const searchRef = useRef(null)    
+    const searchRef = useRef(null)
   
     const fetchData = () => {
       fetch(`data/${searchRef.current.value}/${limit}`)
         .then(res => res.json())
         .then(data =>{
-          setData(data);
-          setNumberOfEntities(data.count);
-          setSearchW(searchRef.current.value)
+          if(data.count === 0){
+            alert("Enter a valid entity label.")
+          }
+          if(data.count === -1){
+            alert("WDQS internal error. Try again setting a limit.")
+          }
+          if(data.count === -2){
+            alert("Entity not found. Try again with another label.")
+          }
+          else{
+            setData(data);
+            setNumberOfEntities(data.count);
+            setSearchW(searchRef.current.value)
+          }
           setLoadingSearch(false)
         })
-        .catch(error => console.log("Fetch data error: " + error))
     }
   
     function onClickButton() {
-      setLoadingSearch(true)
-      fetchData()
-    }
+      if (searchRef.current.value.length === 0) {
+        alert("Search for a Wikidata entity label :)")
 
-    const fetchSearch = () => {
-      fetch(`type/${searchRef.current.value}`)
-        .then(res => res.json())
-        .then(data => {
-          setEntityInfo(data)
-          console.log(data);
-        })
+      }
+      else {
+        setLoadingSearch(true)
+        fetchData()
+      }
+      
     }
 
     function onChangeInput() {
-      console.log("ONCHANGEINPUT");
+      setEntitiesWithCoords(0)
       setSearch(searchRef.current.value)
-      fetchSearch()
+      var id = searchRef.current.value.split(" (Q")[1]
+      id = id.substring(0, id.length - 1)
+      fetch(`type/Q${id}`).then(res => res.json())
+        .then(data => {
+          setEntitiesWithCoords(data.entitiesWithCoords)
+          setEntityDescription(data.description)
+        })
     }
+
+    function getWikidataURL(search) {
+      var split = search.split("(Q")
+      var id = split[1].substring(0, split[1].length - 1)
+      var url = `https://www.wikidata.org/wiki/Q${id}`
+      return url
+    } 
   
   useEffect(() => {
     fetch(`autocomplete/${search}`)
@@ -70,34 +92,37 @@ function Home() {
                     list='list'
                     disabled={loadingSearch}
                 />
+                {
+                  search.length === 0 && !loadingSearch ?
+                  <span class="text-danger col" style={{'font-size': '12px'}}><i class="bi bi-shield-exclamation"></i> Required camp</span> : null
+                }
                 <Tippy 
                   content='Search a Wikidata entity type label. For example: museum, mountain, river, stadium, temple, work of art, beach, etc.' 
-                  placement="right" 
-                  followCursor={true}
+                  placement="bottom"
                   maxWidth={350}
                   theme="material"
                 >
-                  <i className="bi bi-question-circle"></i>                  
+                  <i className="bi bi-info-circle col float-end"></i>                  
                 </Tippy>
-                {/* {
-                  numberOfEntities > 100 ? 
-                  <Tippy 
-                  content='Search a Wikidata entity type label. For example: museum, mountain, river, stadium, temple, work of art, beach, etc.' 
-                  placement="right" 
-                  followCursor={true}
+                {
+                  entitiesWithCoords > 10000 ? 
+                  <Tippy
+                  content='This type has many georeferenceable instances. Map generation may take longer than expected. If it takes longer than expected, try again by setting a limit.' 
+                  placement="bottom"
                   maxWidth={350}
                   theme="material"
-                >
-                  <i class="bi bi-exclamation-triangle"></i>                  
+                ><i class="ms-2 bi bi-exclamation-triangle-fill text-warning"></i>                 
                 </Tippy> : null
-                } */}
+                }
+                
               </div>
           
                 <datalist className='text-danger' id='list'>
                 {
                   autocomplete.map(e=>{
+                    var id = e[0]
                     var values = e[1]
-                    return <option className="fs-1" value={values.label}> {values.description}</option>
+                    return <option className="fs-1" value={values.label + ` (${id})`}>{values.description}</option>
                   })
                 }
                 </datalist>
@@ -112,14 +137,13 @@ function Home() {
                   <option value='0'>No limit</option>
                 </select> 
                 <Tippy 
-                  content='Select the limit of entities to get. No Limit by default' 
-                  placement="right" 
-                  followCursor={true}
+                  content='You can set the limit of entities to get (highly recommended when an entity type has many georeferenceable instances).' 
+                  placement="bottom"
                   maxWidth={350}
                   theme="material"
                   
                 >
-                  <i className="bi bi-question-circle" style={{"font-size": "1rem"}}></i>                  
+                  <i className="bi bi-question-circle col float-end"></i>                  
                 </Tippy>
               </div>
               <div className="col-sm-1">
@@ -136,7 +160,7 @@ function Home() {
     <div className="row d-flex justify-content-center">
     </div>
     <div className="row d-flex justify-content-center">
-        <MapContainer  className='map col-10' trackResize={false} minZoom={2}>             
+        <MapContainer  className='map col-10 border border-2 border-dark rounded-4' trackResize={false} minZoom={2} center={[0,0]}>             
           <TileLayer
             url='https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png'
             attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
@@ -145,24 +169,40 @@ function Home() {
           <MarkerCluster markers={data} />
         </MapContainer>
     </div>
-      {
-      // (numberOfEntities > 0) && <div>HOLA</div>
+    {
       numberOfEntities > 0 ? 
-      <div className="row p-3 m-3 bg-light">
-        <div className='col'>
-          <p className="fs-3">Results</p>
-          Search: <b> {searchW} </b> <br></br> 
-          Number of entities found: <b>{numberOfEntities}</b> <br></br>
-          {/* <ul className="list-group">
-            <li className="list-group-item">Search: {searchRef}</li>
-            <li className="list-group-item">Number of entities founded: {numberOfEntities}</li>
-          </ul> */}
-        </div>
+      <div className="container-fluid bg-light p-4 m-2">
+        {
+          loadingSearch ? <div class="text-center">
+          <div class="spinner-grow" role="status">
+          </div>
+          <div class="spinner-grow" role="status">
+          </div>
+          <div class="spinner-grow" role="status">
+          </div>
+        </div> :
+          <>
+            <p className="fs-3 border-bottom text-center">Results</p>
+            <div className="row row-cols-2 lh-lg">
+          <div className="col fs-6">
+          Label: <b>{searchW.split('(Q')[0]}<a href={getWikidataURL(searchW)} target="_blank" rel="noreferrer noopener">(Q{searchW.split('(Q')[1]}<i className="bi bi-box-arrow-in-up-right"></i></a></b> 
+          </div>
+          <div className="col fs-6">
+            Number of entities found: <b>{numberOfEntities}</b> 
+          </div>
+          <div className="col fs-6">
+            Description: {entityDescription}
+          </div>
+          </div>
+          </>
+        }
       </div> : 
         null
     }
         </>
      );
+
+
 }
 
 export default Home;
