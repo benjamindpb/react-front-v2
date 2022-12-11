@@ -6,12 +6,12 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import "leaflet.markercluster/dist/leaflet.markercluster";
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 import "/node_modules/tippy.js/dist/tippy.css"
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 
 import './App.css';
