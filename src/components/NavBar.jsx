@@ -13,10 +13,10 @@ function NavBar() {
                 <div className="collapse navbar-collapse flex-grow-1 text-right" id="navbarSupportedContent">
                     <ul className="navbar-nav ms-auto flex-nowrap">
                         <li className="nav-item">
-                            <Link className="nav-link m-2 menu-item fs-5" aria-current="page" to="/">Home</Link>
+                            <Link className="nav-link m-2 menu-item fs-3" aria-current="page" to="/">Home</Link>
                         </li>
                         <li className="nav-item">
-                            <Link className="nav-link m-2 menu-item fs-5" to="/about">About</Link>
+                            <Link className="nav-link m-2 menu-item fs-3" to="/about">About</Link>
                         </li>
                         {/* <li className="nav-item">
                             <Link className="nav-link m-2 menu-item fs-5" to="/contact">Contact</Link>

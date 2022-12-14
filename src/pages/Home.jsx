@@ -162,8 +162,8 @@ function Home() {
     <div className="row d-flex justify-content-center">
         <MapContainer  className='map col-10 border border-2 border-dark rounded-4' trackResize={false} minZoom={2} center={[0,0]}>             
           <TileLayer
-            url='https://tiles.stadiamaps.com/tiles/outdoors/{z}/{x}/{y}{r}.png'
-            attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+            url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />        
           
           <MarkerCluster markers={data} />
