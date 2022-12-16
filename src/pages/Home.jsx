@@ -25,13 +25,13 @@ function Home() {
         .then(res => res.json())
         .then(data =>{
           if(data.count === 0){
-            alert("Enter a valid entity label.")
+            alert("(ERROR) Enter a valid entity label.")
           }
           if(data.count === -1){
-            alert("WDQS internal error. Try again setting a limit.")
+            alert("(ERROR) WDQS internal error. Try again setting a limit.")
           }
           if(data.count === -2){
-            alert("Entity not found. Try again with another label.")
+            alert("(ERROR) Entity not found. Try again with another label.")
           }
           else{
             setData(data);
@@ -44,12 +44,24 @@ function Home() {
   
     function onClickButton() {
       if (searchRef.current.value.length === 0) {
-        alert("Search for a Wikidata entity label :)")
+        alert("(ERROR) Search for a Wikidata entity label :)")
 
       }
       else {
-        setLoadingSearch(true)
-        fetchData()
+        try {
+          var id = searchRef.current.value.split(" (Q")[1]
+          id = id.substring(0, id.length - 1)
+          fetch(`type/Q${id}`).then(res => res.json())
+            .then(data => {
+              setEntitiesWithCoords(data.entitiesWithCoords)
+              setEntityDescription(data.description)
+            })
+          setLoadingSearch(true)
+          fetchData()
+        } catch (error) {
+          setLoadingSearch(false)
+          alert("(ERROR) You must select an item from the options suggested by the autocomplete of the search bar to perform the search.")
+        }
       }
       
     }
@@ -57,13 +69,6 @@ function Home() {
     function onChangeInput() {
       setEntitiesWithCoords(0)
       setSearch(searchRef.current.value)
-      var id = searchRef.current.value.split(" (Q")[1]
-      id = id.substring(0, id.length - 1)
-      fetch(`type/Q${id}`).then(res => res.json())
-        .then(data => {
-          setEntitiesWithCoords(data.entitiesWithCoords)
-          setEntityDescription(data.description)
-        })
     }
 
     function getWikidataURL(search) {
