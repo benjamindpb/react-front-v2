@@ -21,7 +21,7 @@ function Home() {
     const searchRef = useRef(null)
   
     const fetchData = () => {
-      fetch(`data/${searchRef.current.value}/${limit}`)
+      fetch(`https://api.wdatlas.dcc.uchile.cl/data/${searchRef.current.value}/${limit}`)
         .then(res => res.json())
         .then(data =>{
           if(data.count === 0){
@@ -51,7 +51,7 @@ function Home() {
         try {
           var id = searchRef.current.value.split(" (Q")[1]
           id = id.substring(0, id.length - 1)
-          fetch(`type/Q${id}`).then(res => res.json())
+          fetch(`https://api.wdatlas.dcc.uchile.cl/type/Q${id}`).then(res => res.json())
             .then(data => {
               setEntitiesWithCoords(data.entitiesWithCoords)
               setEntityDescription(data.description)
@@ -69,6 +69,16 @@ function Home() {
     function onChangeInput() {
       setEntitiesWithCoords(0)
       setSearch(searchRef.current.value)
+      try {
+        var id = searchRef.current.value.split(" (Q")[1]
+        id = id.substring(0, id.length - 1)
+        fetch(`https://api.wdatlas.dcc.uchile.cl/type/Q${id}`).then(res => res.json())
+          .then(data => {
+            setEntitiesWithCoords(data.entitiesWithCoords)
+          })
+      } catch (error) {
+        
+      }
     }
 
     function getWikidataURL(search) {
@@ -79,7 +89,7 @@ function Home() {
     } 
   
   useEffect(() => {
-    fetch(`autocomplete/${search}`)
+    fetch(`https://api.wdatlas.dcc.uchile.cl/autocomplete/${search}`)
     .then(res => res.json())
     .then(data => {
         setAutocomplete(data.types)
@@ -168,7 +178,7 @@ function Home() {
         <MapContainer  className='map col-10 border border-2 border-dark rounded-4' trackResize={false} minZoom={2} center={[0,0]}>             
           <TileLayer
             url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />        
           
           <MarkerCluster markers={data} />
