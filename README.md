@@ -32,3 +32,9 @@ It correctly bundles React in production mode and optimizes the build for the be
 
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
+
+---
+
+![powered-madewithreactjs--white](https://user-images.githubusercontent.com/48598318/218345326-4d98890b-2752-4f23-93b4-190c5a3c8427.png)
+
+
