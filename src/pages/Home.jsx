@@ -14,7 +14,7 @@ function Home() {
     const [autocomplete, setAutocomplete] = useState([])
     const [numberOfEntities, setNumberOfEntities] = useState(0)
     const [loadingSearch, setLoadingSearch] = useState(false)
-    const [limit, setLimit] = useState(0)
+    const [limit, setLimit] = useState(1000000)
     const [entitiesWithCoords, setEntitiesWithCoords] = useState(0)
     const [entityDescription, setEntityDescription] = useState('')
   
@@ -143,13 +143,14 @@ function Home() {
                 </datalist>
           
               <div className="col-sm-2">
-                <select className="form-select" id="limitInputSelect" onChange={e => setLimit(e.target.value)} disabled={loadingSearch} defaultValue='0'>
-                  <option value="1">10</option>
-                  <option value="2">100</option>
-                  <option value="3">1000</option>
-                  <option value="4">10000</option>
-                  <option value="5">100000</option>
-                  <option value='0'>No limit</option>
+                <select className="form-select" id="limitInputSelect" onChange={e => setLimit(e.target.value)} disabled={loadingSearch} defaultValue='1000000'>
+                  <option value="1000000">No limit</option>
+		  <option value="10">10</option>
+                  <option value="100">100</option>
+                  <option value="1000">1000</option>
+                  <option value="10000">10000</option>
+                  <option value="100000">100000</option>
+                  <option value="150000">150000</option>
                 </select> 
                 <Tippy 
                   content='You can set the limit of entities to get (highly recommended when an entity type has many georeferenceable instances).' 

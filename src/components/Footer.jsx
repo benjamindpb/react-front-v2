@@ -15,7 +15,7 @@ function Footer() {
     </div>
 
     <div className="col d-flex justify-content-end">
-      <a class="text-dark" href="https://github.com/benjamindpb" target="_blank" rel="noopener noreferrer">
+      <a class="text-dark" href="https://github.com/benjamindpb/wdatlas" target="_blank" rel="noopener noreferrer">
         <i class="bi bi-github fs-1"></i>
       </a>
     </div>
