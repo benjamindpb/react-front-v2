@@ -1,3 +1,5 @@
+import tippy from 'tippy.js';
+
 function getLinkHTML(e){
     var url = e.entity
     var id = url.split('Q')[1]
@@ -6,19 +8,30 @@ function getLinkHTML(e){
 
 function getImageHTML(e){
     var image = e.image
-    var thumb = e.thumbnail
+    var thumb = String(e.thumbnail)
     if (image === "no-image.png") {
       return `<img class='img-thumbnail mx-auto d-block mt-2' src='${thumb}' alt=''></img>`
     }
     else{
-      return `<a href='${image}' target="_blank" rel="noreferrer noopener">
-        <img class='img-thumbnail mx-auto d-block mt-2' src='${thumb}' alt=''></a>` 
+      if(thumb.includes('.svg', 8)){
+        var splitURL = thumb.split("/thumb/")
+        var words = splitURL[1].split("/")
+        var imgName = splitURL[0] + "/" + words[0] + "/" + words[1] + "/" + words[2]
+        return `<a href='${imgName}' target="_blank" rel="noreferrer noopener">
+          <img class='img-thumbnail mx-auto d-block mt-2' src='${imgName}' alt=''></a>`
+      }
+      else{
+        return `<a href='${image}' target="_blank" rel="noreferrer noopener">
+          <img class='img-thumbnail mx-auto d-block mt-2' src='${thumb}' alt=''></a>` 
+
+      }
 
     }
   }
 
+
 function getCountryImg(e) {
-  return `<span class="fi fi-${e.countryCode}"></span>`
+  return `<span class="c-flag fi fi-${e.countryCode}"></span>`
   
 }
 
