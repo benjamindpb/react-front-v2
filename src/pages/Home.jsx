@@ -3,7 +3,6 @@ import { MapContainer, TileLayer } from "react-leaflet"
 import MarkerCluster from "../components/MarkerCluster"
 import Tippy from "@tippy.js/react"
 import '/node_modules/tippy.js/themes/material.css'
-import AbortController from 'abort-controller'
 
 function Home() {
     const [data, setData] = useState([])
@@ -18,16 +17,12 @@ function Home() {
   
     const searchRef = useRef(null)
 
-    const controller = new AbortController()
-    const signal = controller.signal
-
   
     const fetchData = () => {
       fetch(`https://api.wdatlas.dcc.uchile.cl/data/${searchRef.current.value}/${limit}`,
       {
         method: 'get',
-        mode: 'cors',
-        signal: signal
+        mode: 'cors'
       })
         .then(res => res.json())
         .then(data =>{
@@ -72,11 +67,6 @@ function Home() {
       }
       
       
-    }
-
-    function onClickCancelFetch(){
-      console.log("Abort fetch.");
-      controller.abort()
     }
 
     function onChangeInput() {
