@@ -3,9 +3,7 @@ import { MapContainer, TileLayer } from "react-leaflet"
 import MarkerCluster from "../components/MarkerCluster"
 import Tippy from "@tippy.js/react"
 import '/node_modules/tippy.js/themes/material.css'
-
-
-
+import AbortController from 'abort-controller'
 
 function Home() {
     const [data, setData] = useState([])
@@ -19,9 +17,18 @@ function Home() {
     const [entityDescription, setEntityDescription] = useState('')
   
     const searchRef = useRef(null)
+
+    const controller = new AbortController()
+    const signal = controller.signal
+
   
     const fetchData = () => {
-      fetch(`https://api.wdatlas.dcc.uchile.cl/data/${searchRef.current.value}/${limit}`)
+      fetch(`https://api.wdatlas.dcc.uchile.cl/data/${searchRef.current.value}/${limit}`,
+      {
+        method: 'get',
+        mode: 'cors',
+        signal: signal
+      })
         .then(res => res.json())
         .then(data =>{
           if(data.count === 0){
@@ -64,6 +71,12 @@ function Home() {
         }
       }
       
+      
+    }
+
+    function onClickCancelFetch(){
+      console.log("Abort fetch.");
+      controller.abort()
     }
 
     function onChangeInput() {
@@ -98,14 +111,17 @@ function Home() {
     
   return ( 
         <>
-            <div className='row input-group input-group-sm my-3 d-flex justify-content-center'>    
-              <div className="col-sm-3">
+            <div className='row my-3 d-flex justify-content-center'>    
+              <div className="col-md-5">
                 <input className='border text-dark form-control' 
                     ref={searchRef}
+                    type='search'
                     onChange={() => onChangeInput()} 
                     placeholder='Search Wikidata'
                     list='list'
                     disabled={loadingSearch}
+
+
                 />
                 {
                   search.length === 0 && !loadingSearch ?
@@ -129,9 +145,6 @@ function Home() {
                 ><i class="ms-2 bi bi-exclamation-triangle-fill text-warning"></i>                 
                 </Tippy> : null
                 }
-                
-              </div>
-          
                 <datalist className='text-danger' id='list'>
                 {
                   autocomplete.map(e=>{
@@ -141,18 +154,26 @@ function Home() {
                   })
                 }
                 </datalist>
-          
-              <div className="col-sm-2">
+              </div>
+
+                <div className="col-sm-4 col-md-3 col-sm-offset-4">
+              <div class="input-group">
                 <select className="form-select" id="limitInputSelect" onChange={e => setLimit(e.target.value)} disabled={loadingSearch} defaultValue='1000000'>
-                  <option value="1000000">No limit</option>
-		  <option value="10">10</option>
-                  <option value="100">100</option>
-                  <option value="1000">1000</option>
-                  <option value="10000">10000</option>
-                  <option value="100000">100000</option>
-                  <option value="150000">150000</option>
-                </select> 
-                <Tippy 
+                <option value="1000000">No limit</option>
+		                  <option value="10">10</option>
+                      <option value="100">100</option>
+                      <option value="1000">1000</option>
+                      <option value="10000">10000</option>
+                      <option value="100000">100000</option>
+                      <option value="150000">150000</option>
+                </select>
+                <button className='btn btn-secondary' type="button" onClick={onClickButton} disabled={loadingSearch}>
+                        {
+                          loadingSearch ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search" ></i>
+                        }
+                      </button>
+              </div>
+              <Tippy 
                   content='You can set the limit of entities to get (highly recommended when an entity type has many georeferenceable instances).' 
                   placement="bottom"
                   maxWidth={350}
@@ -162,19 +183,10 @@ function Home() {
                   <i className="bi bi-question-circle col float-end"></i>                  
                 </Tippy>
               </div>
-              <div className="col-sm-1">
-                <button className='btn btn-secondary' onClick={onClickButton} disabled={loadingSearch}>
-                    {
-                      loadingSearch ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search" ></i>
-                    }
-                </button>
-              </div>
+                
                      
             </div>
 
-    
-    <div className="row d-flex justify-content-center">
-    </div>
     <div className="row d-flex justify-content-center">
         <MapContainer  className='map col-10 border border-2 border-dark rounded-4' trackResize={false} minZoom={2} center={[0,0]}>             
           <TileLayer
