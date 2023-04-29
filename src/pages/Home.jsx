@@ -146,7 +146,7 @@ function Home() {
                 </datalist>
               </div>
 
-                <div className="col-sm-4 col-md-3 col-sm-offset-4">
+                <div className="col-sm-4 col-sm-offset-3">
               <div class="input-group">
                 <select className="form-select" id="limitInputSelect" onChange={e => setLimit(e.target.value)} disabled={loadingSearch} defaultValue='1000000'>
                 <option value="1000000">No limit</option>
@@ -162,7 +162,9 @@ function Home() {
                           loadingSearch ? <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> : <i className="bi bi-search" ></i>
                         }
                       </button>
+                      {/* <button className="btn btn-danger" disabled="disabled" onClick={() => window.location.reload()}><i class="bi bi-arrow-clockwise"></i></button> */}
               </div>
+              
               <Tippy 
                   content='You can set the limit of entities to get (highly recommended when an entity type has many georeferenceable instances).' 
                   placement="bottom"

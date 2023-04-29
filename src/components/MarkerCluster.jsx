@@ -16,14 +16,9 @@ const MarkerCluster = ({ markers }) => {
   useEffect(() => {
     mcg.clearLayers();
     markers.results?.map((t) => {
-      return L.marker(new L.LatLng(t.lat, t.lon), {
-        icon: customMarker
-      })
-      .addTo(mcg)
-      .bindPopup(getEntityInfo(t))
-    //   .on('click', e => {
-    //     map.setView(e.target.getLatLng(), 16)
-    //   })
+        return L.marker(new L.LatLng(t.lat, t.lon), {
+          icon: customMarker
+        }).addTo(mcg).bindPopup(getEntityInfo(t))
     });
     
     map.setView([0,0], 2)
