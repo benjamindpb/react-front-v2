@@ -10,16 +10,31 @@ function Footer() {
 
     <div className="col-md-3 mx-4 d-flex justify-content-center">
     <a href="https://www.wikidata.org/wiki/Wikidata:Main_Page" class="mb-3 me-2 mb-md-0 text-muted text-decoration-none lh-1" target="_blank" rel="noopener noreferrer">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Powered_by_WIKIDATA_%28plain%29.svg/110px-Powered_by_WIKIDATA_%28plain%29.svg.png" alt="" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7f/Powered_by_WIKIDATA_%28plain%29.svg/125px-Powered_by_WIKIDATA_%28plain%29.svg.png" alt="" />
       </a>
+      
     </div>
 
-    <div className="col d-flex justify-content-center">
-      <a class="text-dark" href="https://github.com/benjamindpb/wdatlas" target="_blank" rel="noopener noreferrer">
-        <i class="bi bi-github fs-2"></i>
+    <div className="col d-flex justify-content-end">
+    
+      
+      <a class="text-dark mx-2" href="https://github.com/benjamindpb/wdatlas" target="_blank" rel="noopener noreferrer">
+        <i class="bi bi-github fs-1"></i>
       </a>
+      
     </div>
+    
   </footer>
+  <div className="row mb-2 border-top p-3">
+      <div className="col d-flex justify-content-center">
+      <a href="https://imfd.cl/en/" class="me-5 mb-md-0 text-muted text-decoration-none lh-1" target="_blank" rel="noopener noreferrer">
+        <img src="imfd.png" alt="imfd" style={{height: '45px'}}/>
+      </a>
+    <a href="https://www.dcc.uchile.cl" class="me-5 mb-md-0 text-muted text-decoration-none lh-1" target="_blank" rel="noopener noreferrer">
+        <img src="logo-dcc.png" alt="dcc-uchile" style={{height: '45px'}}/>
+      </a>
+      </div>
+    </div>
 </div>
 
 
