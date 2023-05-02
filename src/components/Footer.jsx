@@ -25,7 +25,7 @@ function Footer() {
     </div>
     
   </footer>
-  <div className="row mb-2 border-top p-3">
+  <div className="row mb-2 p-3">
       <div className="col d-flex justify-content-center">
       <a href="https://imfd.cl/en/" class="me-5 mb-md-0 text-muted text-decoration-none lh-1" target="_blank" rel="noopener noreferrer">
         <img src="imfd.png" alt="imfd" style={{height: '45px'}}/>

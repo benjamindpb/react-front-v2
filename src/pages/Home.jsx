@@ -191,7 +191,7 @@ function Home() {
     </div>
     {
       numberOfEntities > 0 ? 
-      <div className="container-fluid bg-light p-4 m-2">
+      <div className="container-fluid bg-light p-4 my-3">
         {
           loadingSearch ? <div class="text-center">
           <div class="spinner-grow" role="status">
